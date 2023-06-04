@@ -9,10 +9,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AddMemberComponent {
   form: FormGroup;
 
-  members: any[] = [];
-
-  filteredMembers: any[] = [];
-
   constructor(private formBuilder: FormBuilder) {
     this.form = this.initForm();
   }
@@ -21,25 +17,11 @@ export class AddMemberComponent {
     return this.formBuilder.group({
       memberId: ['', Validators.required],
       categoryId: ['', Validators.required],
-      amount: [0, Validators.required],
+      amount: [0, [Validators.required, Validators.min(0.01)]],
     });
   }
 
   addMember(): void {
     window.console.log(this.form);
-  }
-
-  filterCountry(event: { originalEvent: Event; query: string }) {
-    const filtered: any[] = [];
-    const { query } = event;
-
-    for (let i = 0; i < this.members.length; i++) {
-      const member = this.members[i];
-      if (member.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(member);
-      }
-    }
-
-    this.filteredMembers = filtered;
   }
 }

@@ -8,6 +8,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { AddMemberComponent } from './components/add-member/add-member.component';
 import { PrimeNgSharedModule } from './modules/primeng-shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, AddMemberComponent],
@@ -21,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     }),
     ReactiveFormsModule,
     PrimeNgSharedModule,
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

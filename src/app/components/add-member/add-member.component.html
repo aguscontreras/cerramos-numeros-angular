@@ -6,12 +6,9 @@
   <div class="col form-group">
     <label for="member">Nombre</label>
     <p-autoComplete
+      appAutocompleteMember
       inputId="member"
       formControlName="memberId"
-      [dropdown]="true"
-      [suggestions]="filteredMembers"
-      (completeMethod)="filterCountry($event)"
-      field="name"
       styleClass="form-control"
     ></p-autoComplete>
   </div>
@@ -19,12 +16,9 @@
   <div class="col form-group">
     <label for="category">Categoría</label>
     <p-autoComplete
+      appAutocompleteCategory
       inputId="category"
       formControlName="categoryId"
-      [dropdown]="true"
-      [suggestions]="filteredMembers"
-      (completeMethod)="filterCountry($event)"
-      field="name"
       styleClass="form-control"
     ></p-autoComplete>
   </div>
