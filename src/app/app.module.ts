@@ -13,7 +13,13 @@ import { ErrorComponent } from './pages/error/error.component';
 import { MessageCardComponent } from './components/message-card/message-card.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, AddMemberComponent, ErrorComponent, MessageCardComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AddMemberComponent,
+    ErrorComponent,
+    MessageCardComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
