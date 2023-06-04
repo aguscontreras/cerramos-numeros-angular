@@ -1,14 +1,15 @@
 <form
   [formGroup]="form"
-  (ngSubmit)="addMember()"
+  (ngSubmit)="onSubmit()"
   class="row row-cols-1 row-cols-lg-3"
 >
   <div class="col form-group">
     <label for="member">Nombre</label>
     <p-autoComplete
+      #memberInput
       appAutocompleteMember
       inputId="member"
-      formControlName="memberId"
+      formControlName="member"
       styleClass="form-control"
     ></p-autoComplete>
   </div>
@@ -16,9 +17,10 @@
   <div class="col form-group">
     <label for="category">Categoría</label>
     <p-autoComplete
+      #categoryInput
       appAutocompleteCategory
       inputId="category"
-      formControlName="categoryId"
+      formControlName="category"
       styleClass="form-control"
     ></p-autoComplete>
   </div>
@@ -39,8 +41,8 @@
   <div class="text-center mt-4 col col-lg-12">
     <p-button
       type="submit"
-      icon="pi pi-calculator"
-      label="Calcular gastos"
+      icon="pi pi-plus"
+      label="Agregar"
       [disabled]="form.invalid"
     ></p-button>
   </div>
