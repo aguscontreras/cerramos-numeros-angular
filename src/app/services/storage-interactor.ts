@@ -24,6 +24,7 @@ export class StorageInteractor<N extends StoreNames<LocalDBSchema>> {
   ): Promise<LocalDBSchema[N]['value']> {
     await this.storageService.awaitForDb();
     await this.storageService.db?.add(this.storeKey, item);
+    console.log('[Storage interactor] Item added', item);
 
     return item;
   }
@@ -31,6 +32,7 @@ export class StorageInteractor<N extends StoreNames<LocalDBSchema>> {
   async update(id: string, item: LocalDBSchema[N]['value']) {
     await this.storageService.awaitForDb();
     await this.storageService.db?.put(this.storeKey, item, id);
+    console.log('[Storage interactor] Item updated', item);
 
     return item;
   }
