@@ -1,0 +1,7 @@
+<article class="message-card text-center p-4 rounded" [ngClass]="severity">
+  <div class="icon-wrapper">
+    <i class="icon pi" [ngClass]="getIcon()"></i>
+  </div>
+  <h3>{{ title ?? getDefaultTitle() }}</h3>
+  <p>{{ message }}</p>
+</article>

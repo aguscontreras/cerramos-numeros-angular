@@ -9,9 +9,11 @@ import { AddMemberComponent } from './components/add-member/add-member.component
 import { PrimeNgSharedModule } from './modules/primeng-shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './modules/shared/shared.module';
+import { ErrorComponent } from './pages/error/error.component';
+import { MessageCardComponent } from './components/message-card/message-card.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, AddMemberComponent],
+  declarations: [AppComponent, HomeComponent, AddMemberComponent, ErrorComponent, MessageCardComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
