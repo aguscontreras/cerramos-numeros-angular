@@ -5,34 +5,40 @@ import {
   HostListener,
   Inject,
   Output,
+  inject,
 } from '@angular/core';
+import { StoreNames } from 'idb';
 import { AutoComplete } from 'primeng/autocomplete';
+import { LocalDBSchema } from '../../../models';
+import { StorageInteractor } from '../../../services/storage-interactor';
 
 /** Aplica configuracion por defecto y funcionalidades extra a los autocomplete de primeNg.*/
 @Directive({
   selector: '[appAutocompleteBase]',
   standalone: true,
 })
-export class AutocompleteBaseDirective<T extends object> {
-  private _initialData: T[] = [];
+export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>> {
+  private _initialData: LocalDBSchema[N]['value'][] = [];
 
-  @Output() initialDataLoaded = new EventEmitter<T[]>();
+  @Output() initialDataLoaded = new EventEmitter<LocalDBSchema[N]['value'][]>();
 
   constructor(
     @Host() public autocomplete: AutoComplete,
-    @Inject('autocompleteBaseField') private field: keyof T
+    private interactor: StorageInteractor<N>,
+    @Inject(String) private field: keyof LocalDBSchema[N]['value']
   ) {
     this.autocomplete.dropdown = true;
     this.autocomplete.field = String(this.field);
+    this.getInitialData();
   }
 
-  @HostListener('completeMethod', ['$event.query'])
-  filterSuggestionsOnInput(query: string) {
-    this.autocomplete.suggestions = this.getFilteredSuggestions(query);
+  async getInitialData() {
+    const data = await this.interactor.getAll();
+    if (data) this.setInitialData(data);
   }
 
-  set initialData(data: T[]) {
-    if (!data?.length) {
+  setInitialData(data: LocalDBSchema[N]['value'][]) {
+    if (!data) {
       throw new Error('[Autocomplete base] Data array is missing');
     }
 
@@ -40,9 +46,19 @@ export class AutocompleteBaseDirective<T extends object> {
     this.initialDataLoaded.emit(this._initialData);
   }
 
-  getFilteredSuggestions(query: string): T[] {
-    const normalize = (e: T[keyof T] | string) =>
-      String(e).toLowerCase().replace(/\s/g, '');
+  refreshData() {
+    return this.getInitialData();
+  }
+
+  @HostListener('completeMethod', ['$event.query'])
+  filterSuggestionsOnInput(query: string) {
+    this.autocomplete.suggestions = this.getFilteredSuggestions(query);
+  }
+
+  getFilteredSuggestions(query: string): LocalDBSchema[N]['value'][] {
+    const normalize = (
+      e: LocalDBSchema[N]['value'][keyof LocalDBSchema[N]['value']] | string
+    ) => String(e).toLowerCase().replace(/\s/g, '');
 
     const filtered = this._initialData.filter((option) =>
       normalize(option[this.field]).includes(normalize(query))

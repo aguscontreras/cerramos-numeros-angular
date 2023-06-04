@@ -1,14 +1,17 @@
 import { Directive, Host } from '@angular/core';
 import { AutoComplete } from 'primeng/autocomplete';
 import { AutocompleteBaseDirective } from './autocomplete-base.directive';
-import { Category } from '../../../models';
+import { CategoryService } from '../../../services/category.service';
 
 @Directive({
   selector: '[appAutocompleteCategory]',
   standalone: true,
 })
-export class AutocompleteCategoryDirective extends AutocompleteBaseDirective<Category> {
-  constructor(@Host() public override autocomplete: AutoComplete) {
-    super(autocomplete, 'name');
+export class AutocompleteCategoryDirective extends AutocompleteBaseDirective<'categories'> {
+  constructor(
+    @Host() public override autocomplete: AutoComplete,
+    public categoryService: CategoryService
+  ) {
+    super(autocomplete, categoryService, 'name');
   }
 }
