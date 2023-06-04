@@ -10,8 +10,14 @@ export class StorageService {
 
   constructor() {}
 
-  get db(): IDBPDatabase<LocalDBSchema> | undefined {
+  get db() {
     return this._db;
+  }
+
+  async awaitForDb() {
+    if (!this._db) {
+      this._db = await this.initDb();
+    }
   }
 
   async initDb() {
