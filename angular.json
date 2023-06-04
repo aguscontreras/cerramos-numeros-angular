@@ -32,7 +32,8 @@
               "src/styles.scss",
               "node_modules/primeng/resources/themes/vela-orange/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "src/assets/css/bootstrap-grid.min.css"
+              "src/assets/css/bootstrap-grid.min.css",
+              "src/assets/css/bootstrap-utilities.min.css"
             ],
             "scripts": [],
             "serviceWorker": true,
