@@ -3,12 +3,14 @@ import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MessagesModule } from 'primeng/messages';
 
 const modules = [
   TabViewModule,
   ButtonModule,
   AutoCompleteModule,
   InputNumberModule,
+  MessagesModule,
 ];
 
 @NgModule({
