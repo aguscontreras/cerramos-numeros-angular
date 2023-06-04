@@ -1,0 +1,53 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="addMember()"
+  class="row row-cols-1 row-cols-lg-3"
+>
+  <div class="col form-group">
+    <label for="member">Nombre</label>
+    <p-autoComplete
+      inputId="member"
+      formControlName="memberId"
+      [dropdown]="true"
+      [suggestions]="filteredMembers"
+      (completeMethod)="filterCountry($event)"
+      field="name"
+      styleClass="form-control"
+    ></p-autoComplete>
+  </div>
+
+  <div class="col form-group">
+    <label for="category">Categoría</label>
+    <p-autoComplete
+      inputId="category"
+      formControlName="categoryId"
+      [dropdown]="true"
+      [suggestions]="filteredMembers"
+      (completeMethod)="filterCountry($event)"
+      field="name"
+      styleClass="form-control"
+    ></p-autoComplete>
+  </div>
+
+  <div class="col form-group">
+    <label for="amount">Monto</label>
+    <p-inputNumber
+      formControlName="amount"
+      inputId="amount"
+      mode="currency"
+      currency="ARS"
+      locale="es-AR"
+      styleClass="form-control"
+      class="form-control"
+    ></p-inputNumber>
+  </div>
+
+  <div class="text-center mt-4 col col-lg-12">
+    <p-button
+      type="submit"
+      icon="pi pi-calculator"
+      label="Calcular gastos"
+      [disabled]="form.invalid"
+    ></p-button>
+  </div>
+</form>
