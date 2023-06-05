@@ -56,7 +56,8 @@
     },
     {
       "files": [
-        "src/**/*.model.ts"
+        "src/**/*.model.ts",
+        "src/**/*.enum.ts"
       ],
       "extends": [
         "airbnb-typescript/base",

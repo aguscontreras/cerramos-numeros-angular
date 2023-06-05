@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        "src/**/*.model.ts"
+        "src/**/*.model.ts",
+        "src/**/*.enum.ts"
     ]
 }
