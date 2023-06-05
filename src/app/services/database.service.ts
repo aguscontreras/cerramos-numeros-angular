@@ -5,7 +5,7 @@ import { DB_NAME, LocalDBSchema } from '../models';
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
+export class DatabaseService {
   private _db?: IDBPDatabase<LocalDBSchema>;
 
   get db() {

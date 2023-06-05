@@ -1,9 +1,9 @@
-import { StorageService } from './storage.service';
+import { DatabaseService } from './database.service';
 import { LocalDBSchema } from '../models';
 import { StoreNames } from 'idb';
 
 export class StorageInteractor<N extends StoreNames<LocalDBSchema>> {
-  constructor(private storageService: StorageService, private storeKey: N) {}
+  constructor(private storageService: DatabaseService, private storeKey: N) {}
 
   async getAll() {
     await this.storageService.awaitForDb();
