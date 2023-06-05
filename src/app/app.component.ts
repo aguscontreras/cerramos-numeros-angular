@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from './services/storage.service';
+import { DatabaseService } from './services/database.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,7 +8,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private storageService: StorageService, private router: Router) {}
+  constructor(
+    private storageService: DatabaseService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.initDB();
