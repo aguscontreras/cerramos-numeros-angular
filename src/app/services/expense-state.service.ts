@@ -36,6 +36,7 @@ export class ExpenseStateService
   async getAllItems() {
     const expenses = (await this.expenseService.getAll()) ?? [];
     this.setState({ expenses });
+    this.calculateTotal();
   }
 
   async selectItem(id: string) {
