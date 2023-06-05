@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, openDB } from 'idb';
 import { DB_NAME, LocalDBSchema } from '../models';

@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { StoreNames } from 'idb';
 import { DatabaseService } from './database.service';
 import { LocalDBSchema } from '../models';
-import { StoreNames } from 'idb';
 
 export class StorageInteractor<N extends StoreNames<LocalDBSchema>> {
   constructor(private storageService: DatabaseService, private storeKey: N) {}
