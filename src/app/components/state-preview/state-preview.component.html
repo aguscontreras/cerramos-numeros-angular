@@ -1,0 +1,26 @@
+<nav class="row my-4">
+  <div class="col col-lg-1">
+    <div class="stat d-flex align-items-center rounded-1 p-2">
+      <i class="icon pi pi-user me-2"></i>
+      <span class="amount d-block flex-fill text-center">
+        {{ membersAmount }}
+      </span>
+    </div>
+  </div>
+  <div class="col col-lg-1">
+    <div class="stat d-flex align-items-center rounded-1 p-2">
+      <i class="icon pi pi-tags me-2"></i>
+      <span class="amount d-block flex-fill text-center">
+        {{ categoriesAmount }}
+      </span>
+    </div>
+  </div>
+  <div class="col col-lg-1">
+    <div class="stat d-flex align-items-center rounded-1 p-2">
+      <i class="icon pi pi-dollar me-2"></i>
+      <span class="amount d-block flex-fill text-center">
+        {{ totalAmount.toFixed(2) }}
+      </span>
+    </div>
+  </div>
+</nav>
