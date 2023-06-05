@@ -1,3 +1,4 @@
+export { StateCrud } from './state-crud.model';
 export { Severities } from './severities.enum';
 export { LocalDBSchema } from './db-schema.model';
 export { Expense } from './expense.model';

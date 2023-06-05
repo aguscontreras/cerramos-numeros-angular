@@ -4,36 +4,47 @@ import {
   Host,
   HostListener,
   Inject,
+  InjectionToken,
+  OnDestroy,
   Output,
 } from '@angular/core';
 import { StoreNames } from 'idb';
 import { AutoComplete } from 'primeng/autocomplete';
-import { LocalDBSchema } from '../../../models';
-import { StorageInteractor } from '../../../services/storage-interactor';
+import { LocalDBSchema, StateCrud } from '../../../models';
+import { Subscription } from 'rxjs';
 
-/** Aplica configuracion por defecto y funcionalidades extra a los autocomplete de primeNg.*/
+const STATE_CRUD = new InjectionToken('stateCrud');
+
 @Directive({
   selector: '[appAutocompleteBase]',
   standalone: true,
 })
-export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>> {
+export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>>
+  implements OnDestroy
+{
   private _initialData: LocalDBSchema[N]['value'][] = [];
+
+  private _dataSubscription: Subscription;
 
   @Output() initialDataLoaded = new EventEmitter<LocalDBSchema[N]['value'][]>();
 
   constructor(
-    @Host() public autocomplete: AutoComplete,
-    private interactor: StorageInteractor<N>,
-    @Inject(String) private field: keyof LocalDBSchema[N]['value']
+    @Host()
+    public autocomplete: AutoComplete,
+    @Inject(STATE_CRUD)
+    private interactor: StateCrud<LocalDBSchema[N]['value']>,
+    @Inject(String)
+    private field: keyof LocalDBSchema[N]['value']
   ) {
     this.autocomplete.dropdown = true;
     this.autocomplete.field = String(this.field);
-    this.getInitialData();
+    this._dataSubscription = this.interactor.allItems$.subscribe(
+      (data) => (this._initialData = data)
+    );
   }
 
   async getInitialData() {
-    const data = await this.interactor.getAll();
-    if (data) this.setInitialData(data);
+    await this.interactor.getAllItems();
   }
 
   setInitialData(data: LocalDBSchema[N]['value'][]) {
@@ -46,7 +57,7 @@ export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>> {
   }
 
   refreshData() {
-    return this.getInitialData();
+    return this.interactor.getAllItems();
   }
 
   @HostListener('completeMethod', ['$event.query'])
@@ -64,5 +75,9 @@ export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>> {
     );
 
     return filtered;
+  }
+
+  ngOnDestroy(): void {
+    this._dataSubscription.unsubscribe();
   }
 }
