@@ -11,6 +11,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './modules/shared/shared.module';
 import { ErrorComponent } from './pages/error/error.component';
 import { MessageCardComponent } from './components/message-card/message-card.component';
+import { StatePreviewComponent } from './components/state-preview/state-preview.component';
+import { NavComponent } from './components/nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { MessageCardComponent } from './components/message-card/message-card.com
     AddMemberComponent,
     ErrorComponent,
     MessageCardComponent,
+    StatePreviewComponent,
+    NavComponent,
   ],
   imports: [
     BrowserModule,
