@@ -1,6 +1,12 @@
+<app-state-preview
+  [membersAmount]="(members$ | async)?.length ?? 0"
+  [categoriesAmount]="(categories$ | async)?.length ?? 0"
+  [totalAmount]="(totalAmount$ | async) ?? 0"
+/>
+
 <p-tabView>
   <p-tabPanel header="Agregar">
-    <app-add-member></app-add-member>
+    <app-add-member />
   </p-tabPanel>
   <p-tabPanel header="Resultados">
     <p>Resultados de los calculos</p>
