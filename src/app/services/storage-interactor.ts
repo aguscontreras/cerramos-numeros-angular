@@ -40,5 +40,6 @@ export class StorageInteractor<N extends StoreNames<LocalDBSchema>> {
   async delete(id: string) {
     await this.storageService.awaitForDb();
     await this.storageService.db?.delete(this.storeKey, id);
+    console.log('[Storage interactor] Item deleted', id);
   }
 }

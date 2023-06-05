@@ -8,7 +8,9 @@ import { Severities } from '../../models';
 })
 export class MessageCardComponent {
   @Input() severity: keyof typeof Severities = 'error';
+
   @Input() title?: string;
+
   @Input() message?: string;
 
   getIcon(): string {

@@ -8,8 +8,6 @@ import { DB_NAME, LocalDBSchema } from '../models';
 export class StorageService {
   private _db?: IDBPDatabase<LocalDBSchema>;
 
-  constructor() {}
-
   get db() {
     return this._db;
   }
@@ -22,7 +20,7 @@ export class StorageService {
 
   async initDb() {
     try {
-      const db = await openDB<LocalDBSchema>(DB_NAME, 1, {
+      const idpDatabase = await openDB<LocalDBSchema>(DB_NAME, 1, {
         upgrade(db) {
           db.createObjectStore('members', { keyPath: 'id' }).createIndex(
             'by-name',
@@ -41,8 +39,8 @@ export class StorageService {
         },
       });
 
-      this._db = db;
-      return db;
+      this._db = idpDatabase;
+      return idpDatabase;
     } catch (error) {
       window.console.error('[StorageService] Error starting DB.', error);
       throw error;

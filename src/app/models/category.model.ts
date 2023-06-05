@@ -1,5 +1,6 @@
 export class Category {
   name: string;
+
   readonly id: string;
 
   constructor(name: string) {

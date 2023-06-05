@@ -56,12 +56,9 @@
     },
     {
       "files": [
-        "src/**/*.model.ts",
-        "src/**/*.ts"
+        "src/**/*.model.ts"
       ],
       "extends": [
-        "plugin:@angular-eslint/template/recommended",
-        "plugin:@angular-eslint/template/accessibility",
         "airbnb-typescript/base",
         "plugin:import/typescript",
         "plugin:prettier/recommended"

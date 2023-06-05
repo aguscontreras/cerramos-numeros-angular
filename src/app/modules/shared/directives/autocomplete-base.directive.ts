@@ -5,7 +5,6 @@ import {
   HostListener,
   Inject,
   Output,
-  inject,
 } from '@angular/core';
 import { StoreNames } from 'idb';
 import { AutoComplete } from 'primeng/autocomplete';
