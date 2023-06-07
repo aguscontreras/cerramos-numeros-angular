@@ -8,7 +8,7 @@ describe('StatePreviewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StatePreviewComponent]
+      declarations: [StatePreviewComponent],
     });
     fixture = TestBed.createComponent(StatePreviewComponent);
     component = fixture.componentInstance;

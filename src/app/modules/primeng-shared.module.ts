@@ -5,6 +5,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { MessageService } from 'primeng/api';
 
@@ -15,6 +16,7 @@ const modules = [
   InputNumberModule,
   MessagesModule,
   ToastModule,
+  DropdownModule,
 ];
 
 @NgModule({
