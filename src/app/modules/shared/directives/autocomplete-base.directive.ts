@@ -77,7 +77,7 @@ export class AutocompleteBaseDirective<N extends StoreNames<LocalDBSchema>>
     return filtered;
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this._dataSubscription.unsubscribe();
   }
 }

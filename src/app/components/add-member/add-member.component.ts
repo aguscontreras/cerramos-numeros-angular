@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { exhaustMap, from, take, throwError } from 'rxjs';
 import { AutocompleteMemberDirective } from '../../modules/shared/directives/autocomplete-member.directive';
 import { AutocompleteCategoryDirective } from '../../modules/shared/directives/autocomplete-category.directive';
-import { ExpenseStateService } from '../../services/expense-state.service';
-import { MemberStateService } from '../../services/member-state.service';
+import { ExpenseService } from '../../services/expense.service';
+import { MemberService } from '../../services/member.service';
 import { CustomMessageService } from '../../services/custom-message.service';
 import { Expense, Member } from '../../models';
 
@@ -22,14 +22,14 @@ export class AddMemberComponent {
   @ViewChild('categoryInput', { read: AutocompleteCategoryDirective })
   categoryInput?: AutocompleteCategoryDirective;
 
-  selectedMember$ = this.memberStateService.selectedItem$;
+  selectedMember$ = this.memberService.selectedItem$;
 
-  expenses$ = this.expenseStateService.allItems$;
+  expenses$ = this.expenseService.allItems$;
 
   constructor(
     private formBuilder: FormBuilder,
-    private memberStateService: MemberStateService,
-    private expenseStateService: ExpenseStateService,
+    private memberService: MemberService,
+    private expenseService: ExpenseService,
     private customMessageService: CustomMessageService
   ) {
     this.form = this.initForm();
@@ -42,7 +42,7 @@ export class AddMemberComponent {
     });
   }
 
-  resetForm(): void {
+  resetForm() {
     this.form.reset({
       member: '',
       amount: 0,
@@ -62,7 +62,7 @@ export class AddMemberComponent {
   private async addMember() {
     const { member, amount } = this.form.value;
 
-    from(this.memberStateService.validateMember(member))
+    from(this.memberService.validateMember(member))
       .pipe(
         exhaustMap(() => this.selectedMember$.pipe(take(1))),
         exhaustMap((selectedMember) =>
@@ -89,7 +89,7 @@ export class AddMemberComponent {
 
   private async saveExpense(amount: number, member: Member) {
     const expense = new Expense(amount, member.id);
-    await this.expenseStateService.addItem(expense);
+    await this.expenseService.addItem(expense);
     return expense;
   }
 }

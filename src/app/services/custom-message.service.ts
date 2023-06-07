@@ -8,6 +8,7 @@ export class CustomMessageService {
   constructor(private messageService: MessageService) {}
 
   showSuccess(summary: string, detail?: string) {
+    this.messageService.clear();
     return this.messageService.add({
       summary,
       detail,
@@ -17,6 +18,7 @@ export class CustomMessageService {
   }
 
   showError(summary: string, detail?: string) {
+    this.messageService.clear();
     return this.messageService.add({
       summary,
       detail,

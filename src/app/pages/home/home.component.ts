@@ -11,13 +11,13 @@ import { ExpenseService } from '../../services/expense.service';
 export class HomeComponent {
   members$ = this.membersStateService.allItems$;
 
-  categories$ = this.categoryStateService.allItems$;
+  categories$ = this.categoryService.allItems$;
 
-  totalAmount$ = this.expenseStateService.totalAmount$;
+  totalAmount$ = this.expenseService.totalAmount$;
 
   constructor(
     private membersStateService: MemberService,
-    private categoryStateService: CategoryService,
-    private expenseStateService: ExpenseService
+    private categoryService: CategoryService,
+    private expenseService: ExpenseService
   ) {}
 }

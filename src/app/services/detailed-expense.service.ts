@@ -16,9 +16,9 @@ export class DetailedExpenseService {
   private totalAmountSource: BehaviorSubject<number>;
 
   constructor(
-    private expenseStateService: ExpenseService,
-    private memberStateService: MemberService,
-    private categoryStateService: CategoryService
+    private expenseService: ExpenseService,
+    private memberService: MemberService,
+    private categoryService: CategoryService
   ) {
     this.detailedExpenses$ = this.getDetailed$();
     this.totalAmountSource = new BehaviorSubject(0);
@@ -26,9 +26,9 @@ export class DetailedExpenseService {
   }
 
   private getDetailed$(): Observable<DetailedExpense[]> {
-    const expenses$ = this.expenseStateService.allItems$;
-    const members$ = this.memberStateService.allItems$;
-    const categories$ = this.categoryStateService.allItems$;
+    const expenses$ = this.expenseService.allItems$;
+    const members$ = this.memberService.allItems$;
+    const categories$ = this.categoryService.allItems$;
 
     return combineLatest([expenses$, members$, categories$]).pipe(
       map(([expenses, members, categories]) =>

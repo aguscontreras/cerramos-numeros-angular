@@ -9,17 +9,15 @@ import { Observable, forkJoin, map, take } from 'rxjs';
 export class CalculatorService {
   totalMembers$ = this.getTotalMembers$();
 
-  totalAmount$ = this.expenseStateService.totalAmount$;
+  totalAmount$ = this.expenseService.totalAmount$;
 
   constructor(
-    private memberStateService: MemberService,
-    private expenseStateService: ExpenseService
+    private memberService: MemberService,
+    private expenseService: ExpenseService
   ) {}
 
   private getTotalMembers$(): Observable<number> {
-    return this.memberStateService.allItems$.pipe(
-      map((members) => members.length)
-    );
+    return this.memberService.allItems$.pipe(map((members) => members.length));
   }
 
   getResult$() {

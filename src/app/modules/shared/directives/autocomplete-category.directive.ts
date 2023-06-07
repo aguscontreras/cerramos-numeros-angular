@@ -10,8 +10,8 @@ import { CategoryService } from '../../../services/category.service';
 export class AutocompleteCategoryDirective extends AutocompleteBaseDirective<'categories'> {
   constructor(
     @Host() public override autocomplete: AutoComplete,
-    public categoryStateService: CategoryService
+    public categoryService: CategoryService
   ) {
-    super(autocomplete, categoryStateService, 'name');
+    super(autocomplete, categoryService, 'name');
   }
 }

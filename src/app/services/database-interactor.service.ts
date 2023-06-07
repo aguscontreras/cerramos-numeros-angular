@@ -60,7 +60,7 @@ export class DatabaseInteractor<
 
   protected async update(id: string, item: LocalDBSchema[Name]['value']) {
     await this.databaseService.awaitForDb();
-    await this.databaseService.db?.put(this.storeName, item, id);
+    await this.databaseService.db?.put(this.storeName, item);
     console.log('[Storage interactor] Item updated', item);
 
     return item;
