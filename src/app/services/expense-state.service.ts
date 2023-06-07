@@ -30,12 +30,32 @@ export class ExpenseStateService
 
   constructor(private expenseService: ExpenseService) {
     super(initialState);
-    this.getAllItems();
+    this.getAllItems('amount');
   }
 
-  async getAllItems() {
-    const expenses = (await this.expenseService.getAll()) ?? [];
-    this.setState({ expenses });
+  async getAllItems(): Promise<void>;
+  async getAllItems(orderBy: 'amount' | 'member-id'): Promise<void>;
+  async getAllItems(orderBy?: 'amount' | 'member-id'): Promise<void> {
+    let expenses: Expense[];
+
+    if (!orderBy) {
+      expenses = (await this.expenseService.getAll()) ?? [];
+    } else {
+      switch (orderBy) {
+        case 'amount':
+          expenses = (await this.expenseService.getAllByAmount()) ?? [];
+          break;
+
+        case 'member-id':
+          expenses = (await this.expenseService.getAllByMemberId()) ?? [];
+          break;
+        default:
+          expenses = [];
+          break;
+      }
+    }
+
+    this.setState({ expenses: expenses ?? [] });
     this.calculateTotal();
   }
 
@@ -65,5 +85,10 @@ export class ExpenseStateService
       .reduce((amount, acc) => (acc += amount), 0);
 
     this.setState({ totalAmount });
+  }
+
+  reverseAllItems() {
+    const allItems = [...this.state.expenses];
+    this.setState({ expenses: allItems.reverse() });
   }
 }
