@@ -1,0 +1,23 @@
+<section>
+  <div class="header my-3">
+    <h3 class="title m-0 mb-2">Juntada del dia</h3>
+    <p class="date m-0">6/6/2023</p>
+  </div>
+
+  <div class="d-flex mb-3 align-items-center justify-content-between">
+    <h5 class="m-0">Gastos</h5>
+    <p-button
+      type="button"
+      styleClass="p-button-outlined p-button-text p-button-secondary"
+      [icon]="
+        reversed ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-down-alt'
+      "
+      (onClick)="reverse()"
+    />
+  </div>
+
+  <app-detail-card
+    *ngFor="let expense of detailedExpenses$ | async"
+    [expense]="expense"
+  />
+</section>

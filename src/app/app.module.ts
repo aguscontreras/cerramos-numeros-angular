@@ -13,6 +13,8 @@ import { ErrorComponent } from './pages/error/error.component';
 import { MessageCardComponent } from './components/message-card/message-card.component';
 import { StatePreviewComponent } from './components/state-preview/state-preview.component';
 import { NavComponent } from './components/nav/nav.component';
+import { DetailsComponent } from './components/details/details.component';
+import { DetailCardComponent } from './components/detail-card/detail-card.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { NavComponent } from './components/nav/nav.component';
     MessageCardComponent,
     StatePreviewComponent,
     NavComponent,
+    DetailsComponent,
+    DetailCardComponent,
   ],
   imports: [
     BrowserModule,

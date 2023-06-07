@@ -1,0 +1,13 @@
+.detail-card {
+  background-color: var(--surface-ground);
+  border-color: var(--surface-border) !important;
+
+  .member {
+    color: var(--bluegray-100);
+  }
+
+  .amount {
+    font-weight: 500;
+    color: var(--bluegray-100);
+  }
+}
