@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { DBSchema } from 'idb';
 import { Member } from './member.model';
 import { Category } from './category.model';
@@ -17,6 +18,6 @@ export interface LocalDBSchema extends DBSchema {
   expenses: {
     value: Expense;
     key: string;
-    indexes: { 'by-amount': number };
+    indexes: { 'by-amount': number; 'by-member-id': string };
   };
 }
