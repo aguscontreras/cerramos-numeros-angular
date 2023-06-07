@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MemberService } from './member.service';
 
-describe('MemberService', () => {
+describe('MemberStateService', () => {
   let service: MemberService;
 
   beforeEach(() => {

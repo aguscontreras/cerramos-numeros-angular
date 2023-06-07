@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MemberStateService } from './member-state.service';
-import { ExpenseStateService } from './expense-state.service';
+import { MemberService } from './member.service';
+import { ExpenseService } from './expense.service';
 import { Observable, forkJoin, map, take } from 'rxjs';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class CalculatorService {
   totalAmount$ = this.expenseStateService.totalAmount$;
 
   constructor(
-    private memberStateService: MemberStateService,
-    private expenseStateService: ExpenseStateService
+    private memberStateService: MemberService,
+    private expenseStateService: ExpenseService
   ) {}
 
   private getTotalMembers$(): Observable<number> {

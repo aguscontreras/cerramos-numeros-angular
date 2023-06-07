@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
-import { MemberStateService } from './member-state.service';
-import { CategoryStateService } from './category-state.service';
-import { ExpenseStateService } from './expense-state.service';
+import { MemberService } from './member.service';
+import { CategoryService } from './category.service';
+import { ExpenseService } from './expense.service';
 import { Category, DetailedExpense, Member } from '../models';
 
 @Injectable({
@@ -16,9 +16,9 @@ export class DetailedExpenseService {
   private totalAmountSource: BehaviorSubject<number>;
 
   constructor(
-    private expenseStateService: ExpenseStateService,
-    private memberStateService: MemberStateService,
-    private categoryStateService: CategoryStateService
+    private expenseStateService: ExpenseService,
+    private memberStateService: MemberService,
+    private categoryStateService: CategoryService
   ) {
     this.detailedExpenses$ = this.getDetailed$();
     this.totalAmountSource = new BehaviorSubject(0);

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { MemberStateService } from '../../services/member-state.service';
-import { CategoryStateService } from '../../services/category-state.service';
-import { ExpenseStateService } from '../../services/expense-state.service';
+import { MemberService } from '../../services/member.service';
+import { CategoryService } from '../../services/category.service';
+import { ExpenseService } from '../../services/expense.service';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +16,8 @@ export class HomeComponent {
   totalAmount$ = this.expenseStateService.totalAmount$;
 
   constructor(
-    private membersStateService: MemberStateService,
-    private categoryStateService: CategoryStateService,
-    private expenseStateService: ExpenseStateService
+    private membersStateService: MemberService,
+    private categoryStateService: CategoryService,
+    private expenseStateService: ExpenseService
   ) {}
 }
