@@ -46,5 +46,16 @@
       [disabled]="form.invalid"
       styleClass="d-block mx-auto mb-3 p-button-primary"
     ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-trash"
+      label="Borrar"
+      styleClass="d-block mx-auto p-button-text p-button-danger"
+      (onClick)="validataDeleteCount()"
+    ></p-button>
+
+    <p class="delete-advise text-center" *ngIf="deleteCount < 4">
+      Presiona Borrar ({{ deleteCount }}) veces más para eliminar este gasto
+    </p>
   </div>
 </form>

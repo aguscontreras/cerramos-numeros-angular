@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   from,
@@ -9,6 +9,7 @@ import {
   filter,
   switchMap,
   take,
+  Subscription,
 } from 'rxjs';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseService } from '../../services/expense.service';
@@ -17,19 +18,28 @@ import { CustomMessageService } from '../../services/custom-message.service';
 import { CategoryService } from '../../services/category.service';
 import { Category, DetailedExpense, Expense, Member } from '../../models';
 
+enum EditExpenseActions {
+  UPDATE,
+  DELETE,
+}
+
 @Component({
   selector: 'app-expense-edit',
   templateUrl: './expense-edit.component.html',
   styleUrls: ['./expense-edit.component.scss'],
 })
-export class ExpenseEditComponent implements OnInit {
+export class ExpenseEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
+
+  deleteCount = 4;
 
   private expense: DetailedExpense;
 
   private selectedMember$: Observable<Member | undefined>;
 
   private selectedCategory$: Observable<Category | undefined>;
+
+  private subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,6 +58,10 @@ export class ExpenseEditComponent implements OnInit {
 
   ngOnInit() {
     if (this.expense) this.setFormData(this.expense);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   createForm() {
@@ -77,7 +91,7 @@ export class ExpenseEditComponent implements OnInit {
   private async updateExpense() {
     const { member, amount, category } = this.form.value;
 
-    combineLatest([
+    const subsc = combineLatest([
       this.validateMember$(member),
       this.validateCategory$(category),
     ])
@@ -90,7 +104,7 @@ export class ExpenseEditComponent implements OnInit {
         next: (expense) => {
           console.log('[Expense edit] Expense updated.', expense);
           this.customMessageService.showSuccess('¡Excelente!', 'Gasto editado');
-          this.ref.close(true);
+          this.ref.close(EditExpenseActions.UPDATE);
         },
         error: (error) => {
           console.error('[Expense edit] Error updating expense.', error);
@@ -100,6 +114,8 @@ export class ExpenseEditComponent implements OnInit {
           );
         },
       });
+
+    this.subscription.add(subsc);
   }
 
   private async saveExpense(
@@ -132,5 +148,34 @@ export class ExpenseEditComponent implements OnInit {
     return from(this.categoryService.validateCategory(category)).pipe(
       exhaustMap(() => this.selectedCategory$.pipe(take(1), filter(Boolean)))
     );
+  }
+
+  validataDeleteCount() {
+    --this.deleteCount;
+
+    if (this.deleteCount === 0) {
+      this.deleteExpense();
+    }
+  }
+
+  private deleteExpense() {
+    const { id } = this.expense;
+
+    const subsc = from(this.expenseService.deleteItem(id)).subscribe({
+      next: () => {
+        console.log('[Expense edit] Expense deleted.', id);
+        this.customMessageService.showSuccess('¡Excelente!', 'Gasto eliminado');
+        this.ref.close(EditExpenseActions.DELETE);
+      },
+      error: (error) => {
+        console.error('[Expense edit] Error deleting expense.', error);
+        this.customMessageService.showError(
+          'Ocurrió un error',
+          'Intentá nuevamente'
+        );
+      },
+    });
+
+    this.subscription.add(subsc);
   }
 }
