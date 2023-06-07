@@ -1,4 +1,6 @@
-export class Expense {
+import { ExpenseLike } from './expense-like.model';
+
+export class Expense implements ExpenseLike {
   memberId: string;
 
   amount: number;

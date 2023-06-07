@@ -1,3 +1,5 @@
+export { DetailedExpense } from './detailed-expense.model';
+export { ExpenseLike } from './expense-like.model';
 export { StateCrud } from './state-crud.model';
 export { Severities } from './severities.enum';
 export { LocalDBSchema } from './db-schema.model';
