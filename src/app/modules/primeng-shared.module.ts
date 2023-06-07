@@ -6,6 +6,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import {
+  DialogService,
+  DynamicDialogModule,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 
 import { MessageService } from 'primeng/api';
 
@@ -17,11 +22,12 @@ const modules = [
   MessagesModule,
   ToastModule,
   DropdownModule,
+  DynamicDialogModule,
 ];
 
 @NgModule({
   imports: [...modules],
   exports: [...modules],
-  providers: [MessageService],
+  providers: [MessageService, DialogService, DynamicDialogRef],
 })
 export class PrimeNgSharedModule {}

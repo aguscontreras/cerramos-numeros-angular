@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DetailedExpense } from '../../models';
 
 @Component({
@@ -8,4 +8,6 @@ import { DetailedExpense } from '../../models';
 })
 export class DetailCardComponent {
   @Input() expense!: DetailedExpense;
+
+  @Output() viewOptions = new EventEmitter<DetailedExpense>();
 }

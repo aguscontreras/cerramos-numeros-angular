@@ -63,13 +63,13 @@ export class ExpenseService
     this.setState({ selectedExpense });
   }
 
-  async addItem(member: Expense) {
-    await this.add(member);
+  async addItem(expense: Expense) {
+    await this.add(expense);
     await this.getAllItems();
   }
 
-  async updateItem(id: string, member: Expense) {
-    await this.update(id, member);
+  async updateItem(id: string, expense: Expense) {
+    await this.update(id, expense);
     await this.getAllItems();
   }
 

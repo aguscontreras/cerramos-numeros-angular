@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { DetailedExpense } from '../../models';
 import { ExpenseService } from '../../services/expense.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { ExpenseEditComponent } from '../expense-edit/expense-edit.component';
 
 @Component({
   selector: 'app-details',
@@ -19,19 +20,25 @@ export class DetailsComponent {
 
   constructor(
     private detailedExpenseService: DetailedExpenseService,
-    private expenseStateService: ExpenseService,
+    private expenseService: ExpenseService,
     private dialogService: DialogService
   ) {
     this.detailedExpenses$ = this.detailedExpenseService.detailedExpenses$;
     this.totalAmount$ = this.detailedExpenseService.totalAmount$;
   }
 
-  reverse(): void {
-    this.expenseStateService.reverseAllItems();
+  reverse() {
+    this.expenseService.reverseAllItems();
     this.reversed = !this.reversed;
   }
 
   editExpense(expense: DetailedExpense) {
-    window.console.log(expense);
+    this.dialogService.open(ExpenseEditComponent, {
+      header: 'Editar gasto',
+      width: '80%',
+      data: {
+        expense,
+      },
+    });
   }
 }

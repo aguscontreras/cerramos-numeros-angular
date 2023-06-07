@@ -8,7 +8,7 @@
     <h5 class="m-0">Gastos</h5>
     <p-button
       type="button"
-      styleClass="p-button-outlined p-button-text p-button-secondary"
+      styleClass="p-button-text p-button-secondary"
       [icon]="
         reversed ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-down-alt'
       "
@@ -19,5 +19,6 @@
   <app-detail-card
     *ngFor="let expense of detailedExpenses$ | async"
     [expense]="expense"
+    (viewOptions)="editExpense($event)"
   />
 </section>

@@ -1,0 +1,50 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="row row-cols-1 row-cols-lg-3 pt-3"
+>
+  <div class="col form-group">
+    <label for="member">Nombre</label>
+    <p-autoComplete
+      #memberInput
+      appAutocompleteMember
+      inputId="member"
+      formControlName="member"
+      styleClass="form-control"
+    ></p-autoComplete>
+  </div>
+
+  <!-- <div class="col form-group">
+    <label for="category">Categoría</label>
+    <p-autoComplete
+      #categoryInput
+      appAutocompleteCategory
+      inputId="category"
+      formControlName="category"
+      styleClass="form-control"
+    ></p-autoComplete>
+  </div> -->
+
+  <div class="col form-group">
+    <label for="amount">Monto</label>
+    <p-inputNumber
+      formControlName="amount"
+      inputId="amount"
+      mode="currency"
+      currency="ARS"
+      locale="es-AR"
+      styleClass="form-control"
+      class="form-control"
+    ></p-inputNumber>
+  </div>
+
+  <div class="mt-3 col col-lg-12">
+    <p-button
+      type="submit"
+      icon="pi pi-save"
+      label="Guardar"
+      [disabled]="form.invalid"
+      styleClass="d-block mx-auto mb-3 p-button-primary"
+    ></p-button>
+  </div>
+</form>

@@ -15,6 +15,7 @@ import { StatePreviewComponent } from './components/state-preview/state-preview.
 import { NavComponent } from './components/nav/nav.component';
 import { DetailsComponent } from './components/details/details.component';
 import { DetailCardComponent } from './components/detail-card/detail-card.component';
+import { ExpenseEditComponent } from './components/expense-edit/expense-edit.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { DetailCardComponent } from './components/detail-card/detail-card.compon
     NavComponent,
     DetailsComponent,
     DetailCardComponent,
+    ExpenseEditComponent,
   ],
   imports: [
     BrowserModule,
