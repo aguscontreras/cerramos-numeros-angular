@@ -2,7 +2,7 @@
 @import "primeng/resources/themes/vela-orange/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Montserrat:ital,wght@1,800&family=Noto+Sans:wght@400;500;700&display=swap");
 
 :root {
   --my-font-family: "Noto Sans", sans-serif;
@@ -31,7 +31,32 @@ body {
 }
 
 .text {
+  &-primary {
+    color: var(--primary-color) !important;
+  }
+
+  &-secondary {
+    color: var(--text-color-secondary) !important;
+  }
+
   &-danger {
     color: var(--pink-200) !important;
+  }
+}
+
+.color {
+  &-surface {
+    &-50 {
+      color: var(--surface-50);
+    }
+    &-100 {
+      color: var(--surface-100);
+    }
+    &-200 {
+      color: var(--surface-200);
+    }
+    &-300 {
+      color: var(--surface-300);
+    }
   }
 }

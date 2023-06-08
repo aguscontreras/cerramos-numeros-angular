@@ -1,17 +1,25 @@
-<app-state-preview
-  [membersAmount]="(members$ | async)?.length ?? 0"
-  [categoriesAmount]="(categories$ | async)?.length ?? 0"
-  [totalAmount]="(totalAmount$ | async) ?? 0"
-/>
+<header class="text-center container my-5">
+  <h1 class="title text-primary">
+    ¿Cerramos
+    <br />
+    números?
+  </h1>
+  <p class="subtitle text-secondary">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio omnis qui
+    dolorem cum recusandae esse vel, earum corporis illo aut sapiente ut.
+  </p>
+</header>
 
-<p-tabView>
-  <p-tabPanel header="Agregar">
-    <app-add-member />
-  </p-tabPanel>
-  <p-tabPanel header="Resultados">
-    <p>Resultados de los calculos</p>
-  </p-tabPanel>
-  <p-tabPanel header="Detalle">
-    <app-details />
-  </p-tabPanel>
-</p-tabView>
+<main class="py-4">
+  <p-button
+    label="Registrar nueva juntada"
+    styleClass="p-button-lg d-block mb-4 mx-auto"
+    icon="pi pi-users"
+    routerLink="/create"
+  ></p-button>
+  <p-button
+    styleClass="p-button-lg p-button-secondary d-block mb-4 mx-auto"
+    icon="pi pi-history"
+    label="Seleccionar de mi historial"
+  ></p-button>
+</main>
