@@ -26,6 +26,12 @@ body {
   }
 
   .form-control {
-    width: 100%;
+    width: 100% !important;
+  }
+}
+
+.text {
+  &-danger {
+    color: var(--pink-200) !important;
   }
 }
