@@ -49,6 +49,7 @@ export class MemberService
   }
 
   async deleteItem(id: string) {
+    this.setState({ members: [] });
     await this.delete(id);
     await this.getAllItems();
   }
@@ -63,5 +64,10 @@ export class MemberService
     } else {
       await this.selectItem(member.id);
     }
+  }
+
+  reverseAllItems() {
+    const allItems = [...this.state.members];
+    this.setState({ members: allItems.reverse() });
   }
 }

@@ -16,12 +16,14 @@ import { ExpenseService } from '../../services/expense.service';
 import { MemberService } from '../../services/member.service';
 import { CustomMessageService } from '../../services/custom-message.service';
 import { CategoryService } from '../../services/category.service';
-import { Category, DetailedExpense, Expense, Member } from '../../models';
-
-enum EditExpenseActions {
-  UPDATE,
-  DELETE,
-}
+import {
+  Category,
+  DELETE_COUNT,
+  DetailedExpense,
+  EditItemActions,
+  Expense,
+  Member,
+} from '../../models';
 
 @Component({
   selector: 'app-expense-edit',
@@ -31,7 +33,9 @@ enum EditExpenseActions {
 export class ExpenseEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
-  deleteCount = 4;
+  deleteCount = DELETE_COUNT;
+
+  deleteSubmitted = false;
 
   private expense: DetailedExpense;
 
@@ -104,7 +108,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
         next: (expense) => {
           console.log('[Expense edit] Expense updated.', expense);
           this.customMessageService.showSuccess('¡Excelente!', 'Gasto editado');
-          this.ref.close(EditExpenseActions.UPDATE);
+          this.ref.close(EditItemActions.UPDATE);
         },
         error: (error) => {
           console.error('[Expense edit] Error updating expense.', error);
@@ -151,6 +155,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
   }
 
   validataDeleteCount() {
+    this.deleteSubmitted = true;
     --this.deleteCount;
 
     if (this.deleteCount === 0) {
@@ -165,7 +170,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
       next: () => {
         console.log('[Expense edit] Expense deleted.', id);
         this.customMessageService.showSuccess('¡Excelente!', 'Gasto eliminado');
-        this.ref.close(EditExpenseActions.DELETE);
+        this.ref.close(EditItemActions.DELETE);
       },
       error: (error) => {
         console.error('[Expense edit] Error deleting expense.', error);

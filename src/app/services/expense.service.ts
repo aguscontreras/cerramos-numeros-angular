@@ -78,6 +78,23 @@ export class ExpenseService
     await this.getAllItems();
   }
 
+  async deleteAllByMemberId(id: string) {
+    const memberExpenses = this.state.expenses.filter(
+      ({ memberId }) => memberId === id
+    );
+
+    this.setState({ expenses: [] });
+
+    const queue = [];
+
+    for (const expense of memberExpenses) {
+      queue.push(this.delete(expense.id));
+    }
+
+    await Promise.all(queue);
+    await this.getAllItems();
+  }
+
   private calculateTotal() {
     const totalAmount = this.state.expenses
       .map((exp) => exp.amount)

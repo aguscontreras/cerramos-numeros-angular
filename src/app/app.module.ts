@@ -7,7 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { HomeComponent } from './pages/home/home.component';
 import { AddMemberComponent } from './components/add-member/add-member.component';
 import { PrimeNgSharedModule } from './modules/primeng-shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './modules/shared/shared.module';
 import { ErrorComponent } from './pages/error/error.component';
 import { MessageCardComponent } from './components/message-card/message-card.component';
@@ -16,6 +16,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { DetailsComponent } from './components/details/details.component';
 import { DetailCardComponent } from './components/detail-card/detail-card.component';
 import { ExpenseEditComponent } from './components/expense-edit/expense-edit.component';
+import { EditMemberComponent } from './components/edit-member/edit-member.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ExpenseEditComponent } from './components/expense-edit/expense-edit.com
     DetailsComponent,
     DetailCardComponent,
     ExpenseEditComponent,
+    EditMemberComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +41,7 @@ import { ExpenseEditComponent } from './components/expense-edit/expense-edit.com
       registrationStrategy: 'registerWhenStable:30000',
     }),
     ReactiveFormsModule,
+    FormsModule,
     PrimeNgSharedModule,
     SharedModule,
   ],

@@ -1,11 +1,11 @@
 <article
   class="detail-card border border-1 rounded-1 mb-2 p-3 pe-1 d-flex align-items-center"
 >
-  <span class="member flex-fill">{{ expense.member.name }}</span>
-  <span class="amount">{{ expense.amount | currency }}</span>
+  <span class="member flex-fill">{{ label }}</span>
+  <span class="amount">{{ amount | currency }}</span>
   <p-button
     styleClass="p-button-text p-button-secondary p-button-sm"
     icon="pi pi-ellipsis-v"
-    (onClick)="viewOptions.emit(expense)"
+    (onClick)="viewOptions.emit()"
   />
 </article>

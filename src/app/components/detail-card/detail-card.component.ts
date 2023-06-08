@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DetailedExpense } from '../../models';
 
 @Component({
   selector: 'app-detail-card',
@@ -7,7 +6,9 @@ import { DetailedExpense } from '../../models';
   styleUrls: ['./detail-card.component.scss'],
 })
 export class DetailCardComponent {
-  @Input() expense!: DetailedExpense;
+  @Input() label = '';
 
-  @Output() viewOptions = new EventEmitter<DetailedExpense>();
+  @Input() amount = 0;
+
+  @Output() viewOptions = new EventEmitter();
 }

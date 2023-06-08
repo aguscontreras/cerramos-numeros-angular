@@ -6,6 +6,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import {
   DialogService,
   DynamicDialogModule,
@@ -17,6 +18,7 @@ import { MessageService } from 'primeng/api';
 const modules = [
   TabViewModule,
   ButtonModule,
+  InputTextModule,
   AutoCompleteModule,
   InputNumberModule,
   MessagesModule,

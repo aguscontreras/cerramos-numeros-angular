@@ -4,11 +4,11 @@
     <p class="date m-0">6/6/2023</p>
   </div>
 
-  <div
-    class="d-flex mb-1 align-items-center justify-content-between"
-    *ngIf="(detailedExpenses$ | async)?.length; else emptyMessage"
-  >
-    <h5 class="m-0">Gastos</h5>
+  <div class="d-flex mb-2 align-items-center justify-content-between">
+    <h5 class="m-0">Participantes</h5>
+
+    <!-- <p-dropdown [options]="showOptions" [(ngModel)]="showBy" /> -->
+
     <p-button
       type="button"
       styleClass="p-button-text p-button-secondary"
@@ -19,18 +19,60 @@
     />
   </div>
 
-  <ng-template #emptyMessage>
-    <p-messages severity="info">
-      <ng-template pTemplate>
-        <i class="pi pi-info-circle me-3"></i>
-        <p>No hay gastos registrados</p>
-      </ng-template>
-    </p-messages>
-  </ng-template>
+  <ng-container [ngSwitch]="showBy">
+    <!-- Mostrar Members -->
+    <ng-container *ngSwitchCase="0">
+      <ng-container *ngIf="(members$ | async)?.length; else emptyMembers">
+        <app-detail-card
+          *ngFor="let member of members$ | async"
+          [label]="member.name"
+          [amount]="(getTotalAmount$(member) | async) ?? 0"
+          (viewOptions)="edit(member)"
+        />
+      </ng-container>
 
-  <app-detail-card
-    *ngFor="let expense of detailedExpenses$ | async"
-    [expense]="expense"
-    (viewOptions)="editExpense($event)"
-  />
+      <ng-template #emptyMembers>
+        <p-messages severity="info">
+          <ng-template pTemplate>
+            <i class="pi pi-info-circle me-3"></i>
+            <p>No hay personas registradas</p>
+          </ng-template>
+        </p-messages>
+      </ng-template>
+    </ng-container>
+
+    <!-- Mostrar Categories -->
+    <ng-container *ngSwitchCase="1">
+      <!-- <app-detail-card
+        *ngFor="let member of members$ | async"
+        [label]="member.name"
+        [amount]="(getTotalAmount$(member) | async) ?? 0"
+        (viewOptions)="editExpense($event)"
+      /> -->
+      <p>TODO..</p>
+    </ng-container>
+
+    <!-- Mostrar Detailed Expenses -->
+    <ng-container *ngSwitchCase="2">
+      <ng-container
+        *ngIf="(detailedExpenses$ | async)?.length; else emptyExpenses"
+      >
+        <app-detail-card
+          *ngFor="let expense of detailedExpenses$ | async"
+          [label]="expense.member.name"
+          [amount]="expense.amount"
+          (viewOptions)="edit(expense)"
+        />
+      </ng-container>
+
+      <ng-template #emptyExpenses>
+        <p-messages severity="info">
+          <ng-template pTemplate>
+            <i class="pi pi-info-circle me-3"></i>
+            <p>No hay gastos registrados</p>
+          </ng-template>
+        </p-messages>
+      </ng-template>
+    </ng-container>
+  </ng-container>
 </section>

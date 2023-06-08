@@ -54,7 +54,10 @@
       (onClick)="validataDeleteCount()"
     ></p-button>
 
-    <p class="delete-advise text-center" *ngIf="deleteCount < 4">
+    <p
+      class="text-danger text-center"
+      *ngIf="deleteSubmitted && deleteCount > 0"
+    >
       Presiona Borrar ({{ deleteCount }}) veces más para eliminar este gasto
     </p>
   </div>

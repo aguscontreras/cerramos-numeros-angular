@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  filter,
+  map,
+  take,
+  tap,
+} from 'rxjs';
 import { MemberService } from './member.service';
 import { CategoryService } from './category.service';
 import { ExpenseService } from './expense.service';
@@ -26,9 +34,11 @@ export class DetailedExpenseService {
   }
 
   private getDetailed$(): Observable<DetailedExpense[]> {
-    const expenses$ = this.expenseService.allItems$;
     const members$ = this.memberService.allItems$;
     const categories$ = this.categoryService.allItems$;
+    const expenses$ = this.expenseService.allItems$.pipe(
+      filter((e) => e.length > 0)
+    );
 
     return combineLatest([expenses$, members$, categories$]).pipe(
       map(([expenses, members, categories]) =>

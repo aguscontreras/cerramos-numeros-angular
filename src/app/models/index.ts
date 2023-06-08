@@ -1,3 +1,4 @@
+export { EditItemActions } from './edit-item-actions.enum';
 export { DetailedExpense } from './detailed-expense.model';
 export { ExpenseLike } from './expense-like.model';
 export { StateCrud } from './state-crud.model';

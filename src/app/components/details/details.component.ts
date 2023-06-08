@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
 import { DetailedExpenseService } from '../../services/detailed-expense.service';
-import { Observable } from 'rxjs';
-import { DetailedExpense } from '../../models';
+import { Observable, map } from 'rxjs';
+import { Category, DetailedExpense, Member } from '../../models';
 import { ExpenseService } from '../../services/expense.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ExpenseEditComponent } from '../expense-edit/expense-edit.component';
+import { MemberService } from '../../services/member.service';
+import { SelectItem } from 'primeng/api';
+import { EditMemberComponent } from '../edit-member/edit-member.component';
+
+enum ShowOptions {
+  MEMBER,
+  CATEGORY,
+  DETAILED_EXPENSE,
+}
 
 @Component({
   selector: 'app-details',
@@ -12,27 +21,98 @@ import { ExpenseEditComponent } from '../expense-edit/expense-edit.component';
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent {
+  showBy = ShowOptions.MEMBER;
+
   detailedExpenses$: Observable<DetailedExpense[]>;
+
+  members$: Observable<Member[]>;
 
   totalAmount$: Observable<number>;
 
   reversed = false;
 
+  showOptions: SelectItem[];
+
   constructor(
     private detailedExpenseService: DetailedExpenseService,
+    private memberService: MemberService,
     private expenseService: ExpenseService,
     private dialogService: DialogService
   ) {
     this.detailedExpenses$ = this.detailedExpenseService.detailedExpenses$;
+    this.members$ = this.memberService.allItems$;
     this.totalAmount$ = this.detailedExpenseService.totalAmount$;
+    this.showOptions = this.getShowOptions();
+  }
+
+  getShowOptions(): SelectItem[] {
+    return [
+      {
+        label: 'Personas',
+        value: ShowOptions.MEMBER,
+      },
+      {
+        label: 'Categorias',
+        value: ShowOptions.CATEGORY,
+      },
+      {
+        label: 'Gastos',
+        value: ShowOptions.DETAILED_EXPENSE,
+      },
+    ];
   }
 
   reverse() {
-    this.expenseService.reverseAllItems();
+    switch (this.showBy) {
+      case ShowOptions.MEMBER:
+        this.memberService.reverseAllItems();
+        break;
+      case ShowOptions.CATEGORY:
+        console.log('TODO');
+        break;
+      case ShowOptions.DETAILED_EXPENSE:
+        this.expenseService.reverseAllItems();
+        break;
+
+      default:
+        this.expenseService.reverseAllItems();
+        break;
+    }
     this.reversed = !this.reversed;
   }
 
-  editExpense(expense: DetailedExpense) {
+  edit(item: Member): void;
+  edit(item: Category): void;
+  edit(item: DetailedExpense): void;
+  edit(item: any) {
+    switch (this.showBy) {
+      case ShowOptions.MEMBER:
+        this.editMember(item);
+        break;
+      case ShowOptions.CATEGORY:
+        console.log('TODO');
+        break;
+      case ShowOptions.DETAILED_EXPENSE:
+        this.editExpense(item);
+        break;
+
+      default:
+        this.editExpense(item);
+        break;
+    }
+  }
+
+  private editMember(member: Member) {
+    this.dialogService.open(EditMemberComponent, {
+      header: 'Editar persona',
+      width: '80%',
+      data: {
+        member,
+      },
+    });
+  }
+
+  private editExpense(expense: DetailedExpense) {
     this.dialogService.open(ExpenseEditComponent, {
       header: 'Editar gasto',
       width: '80%',
@@ -40,5 +120,16 @@ export class DetailsComponent {
         expense,
       },
     });
+  }
+
+  getTotalAmount$({ id }: Member): Observable<number> {
+    return this.detailedExpenses$.pipe(
+      map((members) =>
+        members
+          .filter(({ memberId }) => memberId === id)
+          .map(({ amount }) => amount)
+          .reduce((prev, amount) => (prev += amount), 0)
+      )
+    );
   }
 }
