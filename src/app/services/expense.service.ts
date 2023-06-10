@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Expense, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
 import { StateService } from './state.service';
@@ -13,6 +13,11 @@ const initialState: ExpenseState = {
   totalAmount: 0,
 };
 
+const INTERACTOR_EXPENSES = new InjectionToken('interactor', {
+  providedIn: 'root',
+  factory: () => new DatabaseInteractor('expenses'),
+});
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,7 +28,10 @@ export class ExpenseService extends StateService<ExpenseState> {
 
   totalAmount$ = this.select(({ totalAmount }) => totalAmount);
 
-  constructor(private interactor: DatabaseInteractor<'expenses'>) {
+  constructor(
+    @Inject(INTERACTOR_EXPENSES)
+    private interactor: DatabaseInteractor<'expenses'>
+  ) {
     super(initialState);
     this.getAllItems('amount');
   }

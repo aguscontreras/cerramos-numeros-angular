@@ -1,57 +1,62 @@
-import { Injectable } from '@angular/core';
-import { PartyLike, StateCrud } from '../models';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { PartyLike, StateCrud, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
 import { Party } from '../models';
 import { filter } from 'rxjs';
+import { StateService } from './state.service';
 
-export interface PartyState {
-  allParties: PartyLike[];
-  currentParty?: PartyLike;
-}
+type PartyState = StateStoreModel<PartyLike>;
 
 const initialState: PartyState = {
-  allParties: [],
-  currentParty: undefined,
+  allItems: [],
 };
+
+const INTERACTOR_PARTIES = new InjectionToken('interactor', {
+  providedIn: 'root',
+  factory: () => new DatabaseInteractor('parties'),
+});
 
 @Injectable({
   providedIn: 'root',
 })
 export class PartyService
-  extends DatabaseInteractor<'parties', PartyState>
+  extends StateService<PartyState>
   implements StateCrud<Party>
 {
-  allItems$ = this.select(({ allParties }) => allParties);
+  allItems$ = this.select(({ allItems }) => allItems);
 
-  selectedItem$ = this.select(({ currentParty }) => currentParty).pipe(
+  selectedItem$ = this.select(({ selectedItem }) => selectedItem).pipe(
     filter(Boolean)
   );
 
-  constructor() {
-    super('parties', initialState);
+  constructor(
+    @Inject(INTERACTOR_PARTIES)
+    private interactor: DatabaseInteractor<'parties'>
+  ) {
+    super(initialState);
     this.getAllItems();
   }
 
   async getAllItems() {
-    const allParties = (await this.getAll()) ?? [];
-    this.setState({ allParties });
+    const allItems = (await this.interactor.getAll()) ?? [];
+    this.setState({ allItems });
   }
 
   async selectItem(id: string) {
-    const currentParty = await this.get(id);
-    this.setState({ currentParty });
+    const selectedItem = await this.interactor.get(id);
+    this.setState({ selectedItem });
   }
 
-  async addItem(party: Party) {
-    await this.add(party);
+  async add(party: Party) {
+    await this.interactor.add(party);
   }
 
-  async updateItem(party: Party) {
-    await this.update(party);
+  async update(party: Party) {
+    await this.interactor.update(party);
   }
 
-  async deleteItem(id: string) {
-    this.setState({ allParties: [] });
-    await this.delete(id);
+  async delete(id: string) {
+    this.setState({ allItems: [] });
+    await this.interactor.delete(id);
   }
 }

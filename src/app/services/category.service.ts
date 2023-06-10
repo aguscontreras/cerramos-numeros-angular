@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Category, StateCrud, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
 import { StateService } from './state.service';
@@ -8,6 +8,11 @@ type CategoryState = StateStoreModel<Category>;
 const initialState: CategoryState = {
   allItems: [],
 };
+
+const INTERACTOR_CATEGORIES = new InjectionToken('interactor', {
+  providedIn: 'root',
+  factory: () => new DatabaseInteractor('categories'),
+});
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +25,10 @@ export class CategoryService
 
   selectedItem$ = this.select(({ selectedItem }) => selectedItem);
 
-  constructor(private interactor: DatabaseInteractor<'categories'>) {
+  constructor(
+    @Inject(INTERACTOR_CATEGORIES)
+    private interactor: DatabaseInteractor<'categories'>
+  ) {
     super(initialState);
     this.getAllItems();
   }

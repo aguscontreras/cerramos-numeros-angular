@@ -45,10 +45,7 @@ export class DetailedExpenseService {
 
     return combineLatest([party$, members$, categories$, expenses$]).pipe(
       map(([party, members, categories, expenses]) => {
-        console.log(party);
-        console.log(expenses);
-        console.log(members);
-        console.log(categories);
+        console.log({ party, members, categories, expenses });
 
         return this.createDetailedExpenses(
           party,
@@ -58,7 +55,6 @@ export class DetailedExpenseService {
         );
       }),
       tap((detailed) => {
-        console.log(detailed);
         const total = detailed
           .map(({ amount }) => amount)
           .reduce((acc, amount) => (acc += amount), 0);

@@ -1,9 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Member, StateCrud, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
 import { StateService } from './state.service';
 
 type MemberState = StateStoreModel<Member>;
+
+const INTERACTOR_MEMBERS = new InjectionToken('interactor', {
+  providedIn: 'root',
+  factory: () => new DatabaseInteractor('members'),
+});
 
 const initialState: MemberState = {
   allItems: [],
@@ -20,7 +25,10 @@ export class MemberService
 
   selectedItem$ = this.select(({ selectedItem }) => selectedItem);
 
-  constructor(private interactor: DatabaseInteractor<'members'>) {
+  constructor(
+    @Inject(INTERACTOR_MEMBERS)
+    private interactor: DatabaseInteractor<'members'>
+  ) {
     super(initialState);
     this.getAllItems();
   }
@@ -51,8 +59,12 @@ export class MemberService
     if (typeof member === 'string') {
       console.log('[Member state service] New Member should be added');
       const newMember = new Member(member);
-      await this.add(newMember);
-      await this.selectItem(newMember.id);
+      await Promise.all([
+        this.add(newMember),
+        this.getAllItems(),
+        this.selectItem(newMember.id),
+      ]);
+
       return;
     } else {
       await this.selectItem(member.id);
