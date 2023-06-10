@@ -1,0 +1,13 @@
+.party-card {
+  background-color: var(--surface-ground);
+  border-color: var(--surface-border) !important;
+
+  .name {
+    font-weight: 500;
+    color: var(--bluegray-100);
+  }
+
+  .date {
+    color: var(--bluegray-300);
+  }
+}

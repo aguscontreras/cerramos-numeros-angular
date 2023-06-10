@@ -18,6 +18,7 @@ import { DetailCardComponent } from './components/detail-card/detail-card.compon
 import { ExpenseEditComponent } from './components/expense-edit/expense-edit.component';
 import { EditMemberComponent } from './components/edit-member/edit-member.component';
 import { CreationComponent } from './pages/creation/creation.component';
+import { PartyCardComponent } from './components/party-card/party-card.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { CreationComponent } from './pages/creation/creation.component';
     ExpenseEditComponent,
     EditMemberComponent,
     CreationComponent,
+    PartyCardComponent,
   ],
   imports: [
     BrowserModule,
