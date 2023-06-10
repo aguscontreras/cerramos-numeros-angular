@@ -69,7 +69,7 @@ export class AddMemberComponent {
     const currentParty$ = this.currentParty$.pipe(take(1));
     const selectedMember$ = this.selectedMember$.pipe(take(1));
 
-    from(this.memberService.validateMember(member))
+    from(this.memberService.validate(member))
       .pipe(
         exhaustMap(() => combineLatest([currentParty$, selectedMember$])),
         exhaustMap(([currentParty, selectedMember]) =>

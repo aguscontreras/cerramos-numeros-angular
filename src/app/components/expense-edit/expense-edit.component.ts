@@ -159,7 +159,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
   }
 
   private validateMember$(member: string | Member) {
-    return from(this.memberService.validateMember(member)).pipe(
+    return from(this.memberService.validate(member)).pipe(
       exhaustMap(() => this.selectedMember$.pipe(take(1), filter(Boolean)))
     );
   }

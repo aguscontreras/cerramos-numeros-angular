@@ -1,65 +1,58 @@
 import { Injectable } from '@angular/core';
-import { Member } from '../models';
-import { StateCrud } from '../models/state-crud.model';
+import { Member, StateCrud, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
+import { StateService } from './state.service';
 
-interface MemberState {
-  members: Member[];
-  selectedMember?: Member;
-}
+type MemberState = StateStoreModel<Member>;
 
 const initialState: MemberState = {
-  members: [],
+  allItems: [],
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class MemberService
-  extends DatabaseInteractor<'members', MemberState>
+  extends StateService<MemberState>
   implements StateCrud<Member>
 {
-  allItems$ = this.select(({ members }) => members);
+  allItems$ = this.select(({ allItems }) => allItems);
 
-  selectedItem$ = this.select(({ selectedMember }) => selectedMember);
+  selectedItem$ = this.select(({ selectedItem }) => selectedItem);
 
-  constructor() {
-    super('members', initialState);
+  constructor(private interactor: DatabaseInteractor<'members'>) {
+    super(initialState);
     this.getAllItems();
   }
 
   async getAllItems() {
-    const members = (await this.getAll()) ?? [];
-    this.setState({ members });
+    const allItems = (await this.interactor.getAll()) ?? [];
+    this.setState({ allItems });
   }
 
   async selectItem(id: string) {
-    const selectedMember = await this.get(id);
-    this.setState({ selectedMember });
+    const selectedItem = await this.interactor.get(id);
+    this.setState({ selectedItem });
   }
 
-  async addItem(member: Member) {
-    await this.add(member);
+  async add(member: Member) {
+    await this.interactor.add(member);
   }
 
-  async updateItem(member: Member) {
-    await this.update(member);
+  async update(member: Member) {
+    await this.interactor.update(member);
   }
 
-  async deleteItem(id: string) {
-    await this.delete(id);
+  async delete(id: string) {
+    await this.interactor.delete(id);
   }
 
-  async validateMember(member: string | Member) {
+  async validate(member: string | Member) {
     if (typeof member === 'string') {
       console.log('[Member state service] New Member should be added');
       const newMember = new Member(member);
-
-      await Promise.all([
-        this.addItem(newMember),
-        this.getAllItems(),
-        this.selectItem(newMember.id),
-      ]);
+      await this.add(newMember);
+      await this.selectItem(newMember.id);
       return;
     } else {
       await this.selectItem(member.id);
@@ -67,7 +60,7 @@ export class MemberService
   }
 
   reverseAllItems() {
-    const allItems = [...this.state.members];
-    this.setState({ members: allItems.reverse() });
+    const allItems = [...this.state.allItems];
+    this.setState({ allItems: allItems.reverse() });
   }
 }

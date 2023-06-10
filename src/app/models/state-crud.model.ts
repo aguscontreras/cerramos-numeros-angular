@@ -5,7 +5,7 @@ export interface StateCrud<T = unknown> {
   selectedItem$?: Observable<T | undefined>;
   getAllItems: () => void | T | Promise<void> | Promise<T>;
   selectItem?: (id: string) => void | T | Promise<void> | Promise<T>;
-  addItem: (item: T) => void | T | Promise<void> | Promise<T>;
-  updateItem: (item: T) => void | T | Promise<void> | Promise<T>;
-  deleteItem: (id: string) => void | T | Promise<void> | Promise<T>;
+  add: (item: T) => void | T | Promise<void> | Promise<T>;
+  update: (item: T) => void | T | Promise<void> | Promise<T>;
+  delete: (id: string) => void | T | Promise<void> | Promise<T>;
 }

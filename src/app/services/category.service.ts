@@ -1,63 +1,58 @@
 import { Injectable } from '@angular/core';
-import { StateCrud, Category } from '../models';
+import { Category, StateCrud, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
+import { StateService } from './state.service';
 
-interface CategoryState {
-  categories: Category[];
-  selectedCategory?: Category;
-}
+type CategoryState = StateStoreModel<Category>;
 
 const initialState: CategoryState = {
-  categories: [],
+  allItems: [],
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService
-  extends DatabaseInteractor<'categories', CategoryState>
+  extends StateService<CategoryState>
   implements StateCrud<Category>
 {
-  allItems$ = this.select(({ categories }) => categories);
+  allItems$ = this.select(({ allItems }) => allItems);
 
-  selectedItem$ = this.select(({ selectedCategory }) => selectedCategory);
+  selectedItem$ = this.select(({ selectedItem }) => selectedItem);
 
-  constructor() {
-    super('categories', initialState);
+  constructor(private interactor: DatabaseInteractor<'categories'>) {
+    super(initialState);
     this.getAllItems();
   }
 
   async getAllItems() {
-    const categories = (await this.getAll()) ?? [];
-    this.setState({ categories });
+    const allItems = (await this.interactor.getAll()) ?? [];
+    this.setState({ allItems });
   }
 
   async selectItem(id: string) {
-    const selectedCategory = await this.get(id);
-    this.setState({ selectedCategory });
+    const selectedItem = await this.interactor.get(id);
+    this.setState({ selectedItem });
   }
 
-  async addItem(member: Category) {
-    await this.add(member);
+  async add(member: Category) {
+    await this.interactor.add(member);
   }
 
-  async updateItem(member: Category) {
-    await this.update(member);
+  async update(member: Category) {
+    await this.interactor.update(member);
   }
 
-  async deleteItem(id: string) {
-    await this.delete(id);
+  async delete(id: string) {
+    await this.interactor.delete(id);
   }
 
   async validateCategory(category: string | Category) {
     if (typeof category === 'string') {
       console.log('[Category state service] New Category should be added');
       const newCategory = new Category(category);
-      await Promise.all([
-        this.addItem(newCategory),
-        this.getAllItems(),
-        this.selectItem(newCategory.id),
-      ]);
+      await this.add(newCategory);
+      await this.selectItem(newCategory.id);
     } else {
       await this.selectItem(category.id);
     }

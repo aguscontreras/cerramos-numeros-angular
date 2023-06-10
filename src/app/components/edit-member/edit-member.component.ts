@@ -47,11 +47,7 @@ export class EditMemberComponent {
   }
 
   private async saveMember(member: Member) {
-    await Promise.all([
-      this.memberService.updateItem(member),
-      this.memberService.getAllItems(),
-    ]);
-
+    await this.memberService.update(member);
     return member;
   }
 
@@ -70,7 +66,7 @@ export class EditMemberComponent {
     try {
       await Promise.all([
         this.expenseService.deleteAllByMemberId(id),
-        this.memberService.deleteItem(id),
+        this.memberService.delete(id),
         this.expenseService.getAllItems(),
         this.memberService.getAllItems(),
       ]);

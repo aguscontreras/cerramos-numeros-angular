@@ -1,101 +1,95 @@
 import { Injectable } from '@angular/core';
-import { Expense, StateCrud } from '../models';
+import { Expense, StateStoreModel } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
-import { PartyService } from './party.service';
+import { StateService } from './state.service';
 
-interface ExpenseState {
-  expenses: Expense[];
-  selectedExpense?: Expense;
+interface ExpenseState extends StateStoreModel<Expense> {
   totalAmount: number;
 }
 
 const initialState: ExpenseState = {
-  expenses: [],
-  selectedExpense: undefined,
+  allItems: [],
+  selectedItem: undefined,
   totalAmount: 0,
 };
 
 @Injectable({
   providedIn: 'root',
 })
-export class ExpenseService
-  extends DatabaseInteractor<'expenses', ExpenseState>
-  implements StateCrud<Expense>
-{
-  allItems$ = this.select(({ expenses }) => expenses);
+export class ExpenseService extends StateService<ExpenseState> {
+  allItems$ = this.select(({ allItems }) => allItems);
 
-  selectedItem$ = this.select(({ selectedExpense }) => selectedExpense);
+  selectedItem$ = this.select(({ selectedItem }) => selectedItem);
 
   totalAmount$ = this.select(({ totalAmount }) => totalAmount);
 
-  constructor(private partyService: PartyService) {
-    super('expenses', initialState);
+  constructor(private interactor: DatabaseInteractor<'expenses'>) {
+    super(initialState);
     this.getAllItems('amount');
   }
 
   async getAllItems(): Promise<void>;
   async getAllItems(orderBy: 'amount' | 'member-id'): Promise<void>;
   async getAllItems(orderBy?: 'amount' | 'member-id'): Promise<void> {
-    this.partyService.selectedItem$.subscribe({
-      next: async (currentParty) => {
-        let expenses: Expense[];
+    let allItems: Expense[];
 
-        if (!orderBy) {
-          expenses = (await this.getAll()) ?? [];
-        } else {
-          switch (orderBy) {
-            case 'amount':
-              expenses = (await this.getAllFromIndex('by-amount')) ?? [];
-              break;
+    if (!orderBy) {
+      allItems = (await this.interactor.getAll()) ?? [];
+    } else {
+      switch (orderBy) {
+        case 'amount':
+          allItems = (await this.interactor.getAllFromIndex('by-amount')) ?? [];
+          break;
 
-            case 'member-id':
-              expenses = (await this.getAllFromIndex('by-member-id')) ?? [];
-              break;
-            default:
-              expenses = [];
-              break;
-          }
-        }
+        case 'member-id':
+          allItems =
+            (await this.interactor.getAllFromIndex('by-member-id')) ?? [];
+          break;
+        default:
+          allItems = [];
+          break;
+      }
+    }
 
-        expenses = expenses.filter(
-          ({ partyId }) => partyId === currentParty.id
-        );
-
-        this.setState({ expenses: expenses ?? [] });
-        this.calculateTotal();
-      },
-    });
+    this.setState({ allItems });
+    this.calculateTotal();
   }
 
   async selectItem(id: string) {
-    const selectedExpense = await this.get(id);
-    this.setState({ selectedExpense });
+    const selectedItem = await this.interactor.get(id);
+    this.setState({ selectedItem });
   }
 
   async addItem(expense: Expense) {
-    await this.add(expense);
+    await this.interactor.add(expense);
   }
 
   async updateItem(expense: Expense) {
-    await this.update(expense);
+    await this.interactor.update(expense);
   }
 
   async deleteItem(id: string) {
-    await this.delete(id);
+    await this.interactor.delete(id);
   }
 
   async deleteAllByMemberId(id: string) {
-    const queue = this.state.expenses
-      .filter(({ memberId }) => memberId === id)
-      .map((expense) => this.delete(expense.id));
+    const memberExpenses = this.state.allItems.filter(
+      ({ memberId }) => memberId === id
+    );
 
-    this.setState({ expenses: [] });
+    this.setState({ allItems: [] });
+
+    const queue = [];
+
+    for (const expense of memberExpenses) {
+      queue.push(this.interactor.delete(expense.id));
+    }
 
     await Promise.all(queue);
   }
 
   private calculateTotal() {
-    const totalAmount = this.state.expenses
+    const totalAmount = this.state.allItems
       .map((exp) => exp.amount)
       .reduce((amount, acc) => (acc += amount), 0);
 
@@ -103,7 +97,7 @@ export class ExpenseService
   }
 
   reverseAllItems() {
-    const allItems = [...this.state.expenses];
-    this.setState({ expenses: allItems.reverse() });
+    const allItems = [...this.state.allItems];
+    this.setState({ allItems: allItems.reverse() });
   }
 }
