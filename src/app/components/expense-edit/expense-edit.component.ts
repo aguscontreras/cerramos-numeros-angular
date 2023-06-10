@@ -23,7 +23,9 @@ import {
   EditItemActions,
   Expense,
   Member,
+  PartyLike,
 } from '../../models';
+import { PartyService } from '../../services/party.service';
 
 @Component({
   selector: 'app-expense-edit',
@@ -39,6 +41,8 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
 
   private expense: DetailedExpense;
 
+  private currentParty$: Observable<PartyLike>;
+
   private selectedMember$: Observable<Member | undefined>;
 
   private selectedCategory$: Observable<Category | undefined>;
@@ -47,6 +51,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
+    private partyService: PartyService,
     private memberService: MemberService,
     private categoryService: CategoryService,
     private expenseService: ExpenseService,
@@ -56,6 +61,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
   ) {
     this.form = this.createForm();
     this.expense = this.config.data.expense;
+    this.currentParty$ = this.partyService.selectedItem$.pipe(filter(Boolean));
     this.selectedMember$ = this.memberService.selectedItem$;
     this.selectedCategory$ = this.categoryService.selectedItem$;
   }
@@ -96,12 +102,20 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
     const { member, amount, category } = this.form.value;
 
     const subsc = combineLatest([
+      this.currentParty$,
       this.validateMember$(member),
       this.validateCategory$(category),
     ])
       .pipe(
-        switchMap(([selectedMember, selectedCategory]) =>
-          from(this.saveExpense(amount, selectedMember, selectedCategory))
+        switchMap(([currentParty, selectedMember, selectedCategory]) =>
+          from(
+            this.saveExpense(
+              amount,
+              currentParty,
+              selectedMember,
+              selectedCategory
+            )
+          )
         )
       )
       .subscribe({
@@ -124,17 +138,23 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
 
   private async saveExpense(
     amount: number,
+    party: PartyLike,
     member: Member,
     category?: Category
   ) {
     const expense: Expense = {
       ...this.expense,
       amount,
+      partyId: party.id,
       memberId: member.id,
       categoryId: category?.id,
     };
 
-    await this.expenseService.updateItem(expense.id, expense);
+    await Promise.all([
+      this.expenseService.updateItem(expense),
+      this.expenseService.getAllItems(),
+    ]);
+
     return expense;
   }
 
@@ -163,24 +183,24 @@ export class ExpenseEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteExpense() {
+  private async deleteExpense() {
     const { id } = this.expense;
 
-    const subsc = from(this.expenseService.deleteItem(id)).subscribe({
-      next: () => {
-        console.log('[Expense edit] Expense deleted.', id);
-        this.customMessageService.showSuccess('¡Excelente!', 'Gasto eliminado');
-        this.ref.close(EditItemActions.DELETE);
-      },
-      error: (error) => {
-        console.error('[Expense edit] Error deleting expense.', error);
-        this.customMessageService.showError(
-          'Ocurrió un error',
-          'Intentá nuevamente'
-        );
-      },
-    });
+    try {
+      await Promise.all([
+        this.expenseService.deleteItem(id),
+        this.expenseService.getAllItems(),
+      ]);
 
-    this.subscription.add(subsc);
+      console.log('[Expense edit] Expense deleted.', id);
+      this.customMessageService.showSuccess('¡Excelente!', 'Gasto eliminado');
+      this.ref.close(EditItemActions.DELETE);
+    } catch (error) {
+      console.error('[Expense edit] Error deleting expense.', error);
+      this.customMessageService.showError(
+        'Ocurrió un error',
+        'Intentá nuevamente'
+      );
+    }
   }
 }

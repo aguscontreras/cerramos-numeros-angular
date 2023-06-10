@@ -39,25 +39,25 @@ export class CategoryService
 
   async addItem(member: Category) {
     await this.add(member);
-    await this.getAllItems();
   }
 
-  async updateItem(id: string, member: Category) {
-    await this.update(id, member);
-    await this.getAllItems();
+  async updateItem(member: Category) {
+    await this.update(member);
   }
 
   async deleteItem(id: string) {
     await this.delete(id);
-    await this.getAllItems();
   }
 
   async validateCategory(category: string | Category) {
     if (typeof category === 'string') {
       console.log('[Category state service] New Category should be added');
       const newCategory = new Category(category);
-      await this.addItem(newCategory);
-      await this.selectItem(newCategory.id);
+      await Promise.all([
+        this.addItem(newCategory),
+        this.getAllItems(),
+        this.selectItem(newCategory.id),
+      ]);
     } else {
       await this.selectItem(category.id);
     }

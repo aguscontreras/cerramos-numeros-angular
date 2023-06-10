@@ -1,9 +1,4 @@
 <section>
-  <div class="header my-3">
-    <h3 class="title m-0 mb-2">Juntada del dia</h3>
-    <p class="date m-0">6/6/2023</p>
-  </div>
-
   <div class="d-flex mb-2 align-items-center justify-content-between">
     <h5 class="m-0">Participantes</h5>
 
@@ -22,12 +17,14 @@
   <ng-container [ngSwitch]="showBy">
     <!-- Mostrar Members -->
     <ng-container *ngSwitchCase="0">
-      <ng-container *ngIf="(members$ | async)?.length; else emptyMembers">
+      <ng-container
+        *ngIf="(detailedByMember$ | async)?.length; else emptyMembers"
+      >
         <app-detail-card
-          *ngFor="let member of members$ | async"
-          [label]="member.name"
-          [amount]="(getTotalAmount$(member) | async) ?? 0"
-          (viewOptions)="edit(member)"
+          *ngFor="let memberExpense of detailedByMember$ | async"
+          [label]="memberExpense.member.name"
+          [amount]="memberExpense.totalAmount"
+          (viewOptions)="edit(memberExpense.member)"
         />
       </ng-container>
 

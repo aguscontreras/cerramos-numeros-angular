@@ -6,6 +6,6 @@ export interface StateCrud<T = unknown> {
   getAllItems: () => void | T | Promise<void> | Promise<T>;
   selectItem?: (id: string) => void | T | Promise<void> | Promise<T>;
   addItem: (item: T) => void | T | Promise<void> | Promise<T>;
-  updateItem: (id: string, item: T) => void | T | Promise<void> | Promise<T>;
+  updateItem: (item: T) => void | T | Promise<void> | Promise<T>;
   deleteItem: (id: string) => void | T | Promise<void> | Promise<T>;
 }

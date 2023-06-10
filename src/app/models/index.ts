@@ -1,3 +1,6 @@
+export { ExpenseByMember } from './expense-by-member.model';
+export { Party } from './party.model';
+export { PartyLike } from './party-like.model';
 export { EditItemActions } from './edit-item-actions.enum';
 export { DetailedExpense } from './detailed-expense.model';
 export { ExpenseLike } from './expense-like.model';

@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
-import { DetailedExpenseService } from '../../services/detailed-expense.service';
 import { Observable, map } from 'rxjs';
-import { Category, DetailedExpense, Member } from '../../models';
-import { ExpenseService } from '../../services/expense.service';
-import { DialogService } from 'primeng/dynamicdialog';
-import { ExpenseEditComponent } from '../expense-edit/expense-edit.component';
-import { MemberService } from '../../services/member.service';
 import { SelectItem } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ExpenseService } from '../../services/expense.service';
+import { DetailedExpenseService } from '../../services/detailed-expense.service';
+import { MemberService } from '../../services/member.service';
 import { EditMemberComponent } from '../edit-member/edit-member.component';
+import { ExpenseEditComponent } from '../expense-edit/expense-edit.component';
+import {
+  Category,
+  DetailedExpense,
+  ExpenseByMember,
+  Member,
+} from '../../models';
 
 enum ShowOptions {
   MEMBER,
@@ -25,6 +30,8 @@ export class DetailsComponent {
 
   detailedExpenses$: Observable<DetailedExpense[]>;
 
+  detailedByMember$: Observable<ExpenseByMember[]>;
+
   members$: Observable<Member[]>;
 
   totalAmount$: Observable<number>;
@@ -39,7 +46,8 @@ export class DetailsComponent {
     private expenseService: ExpenseService,
     private dialogService: DialogService
   ) {
-    this.detailedExpenses$ = this.detailedExpenseService.detailedExpenses$;
+    this.detailedExpenses$ = this.detailedExpenseService.getByExpense$();
+    this.detailedByMember$ = this.detailedExpenseService.getByMember$();
     this.members$ = this.memberService.allItems$;
     this.totalAmount$ = this.detailedExpenseService.totalAmount$;
     this.showOptions = this.getShowOptions();

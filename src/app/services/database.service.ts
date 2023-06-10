@@ -23,6 +23,8 @@ export class DatabaseService {
     try {
       const idpDatabase = await openDB<LocalDBSchema>(DB_NAME, 1, {
         upgrade(db) {
+          const partyStore = db.createObjectStore('parties', { keyPath: 'id' });
+
           const membersStore = db.createObjectStore('members', {
             keyPath: 'id',
           });
@@ -35,6 +37,7 @@ export class DatabaseService {
             keyPath: 'id',
           });
 
+          partyStore.createIndex('by-name', 'name');
           membersStore.createIndex('by-name', 'name');
           categoriesStore.createIndex('by-name', 'name');
           expensesStore.createIndex('by-amount', 'amount');

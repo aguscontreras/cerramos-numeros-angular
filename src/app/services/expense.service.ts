@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Expense, StateCrud } from '../models';
 import { DatabaseInteractor } from './database-interactor.service';
+import { PartyService } from './party.service';
 
 interface ExpenseState {
   expenses: Expense[];
@@ -27,7 +28,7 @@ export class ExpenseService
 
   totalAmount$ = this.select(({ totalAmount }) => totalAmount);
 
-  constructor() {
+  constructor(private partyService: PartyService) {
     super('expenses', initialState);
     this.getAllItems('amount');
   }
@@ -35,27 +36,35 @@ export class ExpenseService
   async getAllItems(): Promise<void>;
   async getAllItems(orderBy: 'amount' | 'member-id'): Promise<void>;
   async getAllItems(orderBy?: 'amount' | 'member-id'): Promise<void> {
-    let expenses: Expense[];
+    this.partyService.selectedItem$.subscribe({
+      next: async (currentParty) => {
+        let expenses: Expense[];
 
-    if (!orderBy) {
-      expenses = (await this.getAll()) ?? [];
-    } else {
-      switch (orderBy) {
-        case 'amount':
-          expenses = (await this.getAllFromIndex('by-amount')) ?? [];
-          break;
+        if (!orderBy) {
+          expenses = (await this.getAll()) ?? [];
+        } else {
+          switch (orderBy) {
+            case 'amount':
+              expenses = (await this.getAllFromIndex('by-amount')) ?? [];
+              break;
 
-        case 'member-id':
-          expenses = (await this.getAllFromIndex('by-member-id')) ?? [];
-          break;
-        default:
-          expenses = [];
-          break;
-      }
-    }
+            case 'member-id':
+              expenses = (await this.getAllFromIndex('by-member-id')) ?? [];
+              break;
+            default:
+              expenses = [];
+              break;
+          }
+        }
 
-    this.setState({ expenses: expenses ?? [] });
-    this.calculateTotal();
+        expenses = expenses.filter(
+          ({ partyId }) => partyId === currentParty.id
+        );
+
+        this.setState({ expenses: expenses ?? [] });
+        this.calculateTotal();
+      },
+    });
   }
 
   async selectItem(id: string) {
@@ -65,34 +74,24 @@ export class ExpenseService
 
   async addItem(expense: Expense) {
     await this.add(expense);
-    await this.getAllItems();
   }
 
-  async updateItem(id: string, expense: Expense) {
-    await this.update(id, expense);
-    await this.getAllItems();
+  async updateItem(expense: Expense) {
+    await this.update(expense);
   }
 
   async deleteItem(id: string) {
     await this.delete(id);
-    await this.getAllItems();
   }
 
   async deleteAllByMemberId(id: string) {
-    const memberExpenses = this.state.expenses.filter(
-      ({ memberId }) => memberId === id
-    );
+    const queue = this.state.expenses
+      .filter(({ memberId }) => memberId === id)
+      .map((expense) => this.delete(expense.id));
 
     this.setState({ expenses: [] });
 
-    const queue = [];
-
-    for (const expense of memberExpenses) {
-      queue.push(this.delete(expense.id));
-    }
-
     await Promise.all(queue);
-    await this.getAllItems();
   }
 
   private calculateTotal() {

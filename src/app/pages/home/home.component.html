@@ -4,22 +4,31 @@
     <br />
     números?
   </h1>
-  <p class="subtitle text-secondary">
+  <p class="text-secondary">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio omnis qui
     dolorem cum recusandae esse vel, earum corporis illo aut sapiente ut.
   </p>
 </header>
 
-<main class="py-4">
+<main class="p-4">
   <p-button
     label="Registrar nueva juntada"
-    styleClass="p-button-lg d-block mb-4 mx-auto"
+    styleClass="p-button-lg d-block mx-auto mb-5"
     icon="pi pi-users"
-    routerLink="/create"
+    (onClick)="createParty()"
   ></p-button>
-  <p-button
-    styleClass="p-button-lg p-button-secondary d-block mb-4 mx-auto"
-    icon="pi pi-history"
-    label="Seleccionar de mi historial"
-  ></p-button>
+
+  <h3 class="subtitle text-secondary">
+    O podés continuar alguna de tus últimas juntadas...
+  </h3>
+
+  <app-party-card
+    *ngFor="let party of allParties$ | async"
+    [party]="party"
+    (click)="continueParty(party)"
+  />
+
+  <p class="text-secondary text-center py-4">
+    ¿Querés ver más? Consultá el historial
+  </p>
 </main>
