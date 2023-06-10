@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { ErrorComponent } from './pages/error/error.component';
 import { CreationComponent } from './pages/creation/creation.component';
+import { currentPartyGuard } from './guards/current-party.guard';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
   {
     path: 'create',
     component: CreationComponent,
+    canActivate: [currentPartyGuard],
   },
   {
     path: 'error',
