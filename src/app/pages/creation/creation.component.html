@@ -32,7 +32,6 @@
 
 <app-state-preview
   [membersAmount]="(members$ | async)?.length ?? 0"
-  [categoriesAmount]="(categories$ | async)?.length ?? 0"
   [totalAmount]="(totalAmount$ | async) ?? 0"
 />
 

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, take } from 'rxjs';
-import { CategoryService } from '../../services/category.service';
-import { ExpenseService } from '../../services/expense.service';
-import { MemberService } from '../../services/member.service';
 import { PartyService } from '../../services/party.service';
-import { Category, Member, PartyLike } from '../../models';
+import { DetailedExpense, ExpenseByMember, PartyLike } from '../../models';
 import { CustomMessageService } from '../../services/custom-message.service';
+import { DetailedExpenseService } from '../../services/detailed-expense.service';
 
 @Component({
   selector: 'app-creation',
@@ -15,9 +13,9 @@ import { CustomMessageService } from '../../services/custom-message.service';
 export class CreationComponent implements OnInit {
   currentParty!: PartyLike;
 
-  members$: Observable<Member[]>;
+  expenses$: Observable<DetailedExpense[]>;
 
-  categories$: Observable<Category[]>;
+  members$: Observable<ExpenseByMember[]>;
 
   totalAmount$: Observable<number>;
 
@@ -25,14 +23,12 @@ export class CreationComponent implements OnInit {
 
   constructor(
     private partyService: PartyService,
-    private membersStateService: MemberService,
-    private categoryService: CategoryService,
-    private expenseService: ExpenseService,
-    private customMessageService: CustomMessageService
+    private customMessageService: CustomMessageService,
+    private detailedExpenseService: DetailedExpenseService
   ) {
-    this.members$ = this.membersStateService.allItems$;
-    this.categories$ = this.categoryService.allItems$;
-    this.totalAmount$ = this.expenseService.totalAmount$;
+    this.expenses$ = this.detailedExpenseService.getByExpense$();
+    this.members$ = this.detailedExpenseService.getByMember$();
+    this.totalAmount$ = this.detailedExpenseService.totalAmount$;
   }
 
   ngOnInit(): void {
@@ -44,7 +40,7 @@ export class CreationComponent implements OnInit {
   async saveName() {
     try {
       await Promise.all([
-        this.partyService.updateItem(this.currentParty),
+        this.partyService.update(this.currentParty),
         this.partyService.getAllItems(),
       ]);
 

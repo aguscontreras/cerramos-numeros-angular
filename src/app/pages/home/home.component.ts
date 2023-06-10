@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
     const party = new Party();
 
     await Promise.all([
-      this.partyService.addItem(party),
+      this.partyService.add(party),
       this.partyService.selectItem(party.id),
       this.partyService.getAllItems(),
     ]);
